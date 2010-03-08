@@ -1,0 +1,34 @@
+<?php
+$loginHeader = $this->translate('Login with username and password');
+$loginFormUrl = $this->url(array(), 'userLogin');
+$lostPassword = $this->translate('Forgot your password?');
+$clickHere = $this->translate('Click here!');
+$lostPasswordUrl = $this->url(array(), 'userRecoverPassword');
+$alreadyLoggedIn = $this->translate('You are already logged in.');
+?>
+<div class="user-login">
+  <h2><?php echo $loginHeader?> </h2>
+  <?php if ($this->alreadyLoggedIn) : ?>
+    <div class="user-login-already">
+      <?php echo $alreadyLoggedIn; ?>
+    </div>
+  <?php else : ?>
+    <form method="POST" action="<?php echo $loginFormUrl?>">
+      <div class="edit-username">
+        <label for="username"><?php echo $this->translate('Username')?></label>
+          <input type="text" name="username" value="" />
+      </div>
+      <div class="edit-password">
+        <label for="password"><?php echo $this->translate('Password')?></label>
+          <input type="password" name="password" value="" />
+      </div>
+      <div class="edit-login">
+        <input type="submit" name="login" value="<?php echo $this->translate('Login')?>" />
+      </div>
+    </form>
+    <div class="lost-password">
+      <?php echo $lostPassword; ?>
+      [<a href="<?php echo $lostPasswordUrl?>"><?php echo $clickHere; ?></a>]
+    </div>
+  <?php endif; ?>
+</div>

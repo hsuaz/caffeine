@@ -1,0 +1,37 @@
+<?php echo $this->doctype(); ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->lang?>" lang="<?php echo $this->lang ?>">
+<head>
+  <?php echo $this->headTitle() ?>
+  <?php echo $this->headMeta() ?>
+  <?php echo $this->headLink() ?>
+  <?php echo $this->headStyle() ?>
+  <?php echo $this->headScript() ?>
+</head>
+<body class="" id="">
+  <div id="site-header">
+    <?php echo $this->translate('Ferrox: FurAffinity Reloaded') ?>
+    <?php echo $this->loginBlock(); ?>
+  </div>
+
+  <div id="left-sidebar">
+    <?php echo $this->placeholder('left-sidebar'); ?>
+  </div>
+
+  <div id="content">
+    <?php if (count($this->placeholder('messages'))): ?>
+      <div id="error-pane">
+        <?php echo $this->placeholder('messages'); ?>
+      </div>
+    <?php endif; ?>
+
+    <?php echo $this->layout()->content; ?>
+  </div>
+
+  <div id="right-sidebar">
+    <?php echo $this->placeholder('right-sidebar'); ?>
+  </div>
+  <div id="site-footer">
+    <?php echo $this->translate('Ferrox: FurAffinity Reloaded') ?>
+  </div>
+</body>
+</html>

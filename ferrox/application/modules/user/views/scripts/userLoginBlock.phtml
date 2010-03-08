@@ -1,0 +1,22 @@
+<?php
+if (!$this->loggedIn) {
+ $loginUrl = $this->url(array(), 'userLogin');
+ $registerUrl = $this->url(array(), 'userRegister');
+} else {
+  $logoutUrl = $this->url(array(), 'userLogout');
+}
+?>
+<div class="user-login-block" id="user-login-block">
+  <?php if ($this->loggedIn) : ?>
+    <?php echo $this->translate('Welcome %1$s', $this->user['username']); ?>
+    <div class="user-actions">
+      <a href="<?php echo $logoutUrl?>"><?php echo $this->translate('Logout')?></a>
+    </div>
+  <?php else : ?>
+    <div class="user-welcome"><?php echo $this->translate('Welcome Guest'); ?></div>
+    <div class="user-actions">
+      <a href="<?php echo $registerUrl; ?>"><?php echo $this->translate('Register') ?></a></a> |
+      <a href="<?php echo $loginUrl; ?>"><?php echo $this->translate('Login') ?></a>
+    </div>
+  <?php endif; ?>
+</div>

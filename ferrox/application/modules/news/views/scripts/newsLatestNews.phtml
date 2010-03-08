@@ -1,0 +1,16 @@
+<?php foreach ($this->news as $news) : ?>
+  <div class="newsItem" id="news-<?php echo $news['id'];?>" lang="<?php echo substr($news['locale'], 0, 2); ?>">
+    <h2 class="newsTitle">
+      <?php echo $news['title']; ?>
+    </h2>
+    <h3 class="newsInfo">
+      <?php $username = $news['author']['username']; ?>
+      <?php $date = new Zend_Date(strtotime($news['datePublished'])) ?>
+      <?php $datePublished = $date->get(Zend_Date::DATE_MEDIUM) . ' ' . $date->get(Zend_Date::TIME_SHORT); ?>
+      <?php echo $this->translate('Posted by %1$s on %2$s', array($username, $datePublished)) ?>
+    </h3>
+    <p class="newsContent">
+      <?php echo $news['content']?>
+    </p>
+  </div>
+<?php endforeach; ?>
