@@ -4,6 +4,26 @@ class Bootstrap
   extends Zend_Application_Bootstrap_Bootstrap
 {
 
+  protected function _initTranslateModule () {
+    $adaptor = 'array';
+    $options = array('scan' => Zend_Translate::LOCALE_DIRECTORY);
+    $trLocale = null;
+    $translate = new Zend_Translate($adaptor, APPLICATION_PATH . '/modules/user/languages', $trLocale, $options);
+    $translate->addTranslation(APPLICATION_PATH . '/modules/news/languages', $trLocale, $options);
+    $translate->addTranslation(APPLICATION_PATH . '/languages', $trLocale, $options);
+    $logger = new Zend_Log_Writer_Stream(APPLICATION_PATH . '/../logs/untranslated.log');
+    $log = new Zend_Log($logger);
+    $translate->setOptions(
+     array (
+       'log' => $log,
+       'logMessage' => '%locale%: %message%',
+       'logUntranslated' => true,
+     )
+    );
+    Zend_Registry::set('Zend_Translate', $translate);
+  }
+
+
   protected function _initFurAffinityApi () {
     $systemSession = new Zend_Session_Namespace('system');
     $remoteSid = isset($systemSession->remoteSession) ? $systemSession->remoteSession : NULL;

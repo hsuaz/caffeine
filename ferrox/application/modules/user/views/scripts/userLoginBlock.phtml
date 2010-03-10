@@ -1,22 +1,28 @@
 <?php
+$welcomeUser = $this->translate('system_user:userLoginBlock:Welcome %1$s');
+$logout      = $this->translate('system_user:userLoginBlock:Logout');
+$login       = $this->translate('system_user:userLoginBlock:Login');
+$register    = $this->translate('system_user:userLoginBlock:Register');
+$welcomeGuest= $this->translate('system_user:userLoginBlock:Welcome Guest');
 if (!$this->loggedIn) {
- $loginUrl = $this->url(array(), 'userLogin');
- $registerUrl = $this->url(array(), 'userRegister');
+  $loginUrl = $this->url(array(), 'userLogin');
+  $registerUrl = $this->url(array(), 'userRegister');
 } else {
   $logoutUrl = $this->url(array(), 'userLogout');
 }
 ?>
+
 <div class="user-login-block" id="user-login-block">
   <?php if ($this->loggedIn) : ?>
-    <?php echo $this->translate('Welcome %1$s', $this->user['username']); ?>
+    <?php printf($welcomeUser, $this->user['username']); ?>
     <div class="user-actions">
-      <a href="<?php echo $logoutUrl?>"><?php echo $this->translate('Logout')?></a>
+      <a href="<?php echo $logoutUrl?>"><?php echo $logout?></a>
     </div>
   <?php else : ?>
-    <div class="user-welcome"><?php echo $this->translate('Welcome Guest'); ?></div>
+    <div class="user-welcome"><?php echo $welcomeGuest; ?></div>
     <div class="user-actions">
-      <a href="<?php echo $registerUrl; ?>"><?php echo $this->translate('Register') ?></a> |
-      <a href="<?php echo $loginUrl; ?>"><?php echo $this->translate('Login') ?></a>
+      <a href="<?php echo $registerUrl; ?>"><?php echo $register ?></a> |
+      <a href="<?php echo $loginUrl; ?>"><?php echo $login ?></a>
     </div>
   <?php endif; ?>
 </div>

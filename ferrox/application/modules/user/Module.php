@@ -1,7 +1,7 @@
 <?php
 
 class Module_User {
-
+  const SYSTEM_ID = 'system_user';
 
   protected function staticRoute($path, $controller, $action) {
     return new Zend_Controller_Router_Route_Static($path, array(

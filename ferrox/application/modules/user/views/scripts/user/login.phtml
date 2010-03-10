@@ -1,10 +1,13 @@
 <?php
-$loginHeader = $this->translate('Login with username and password');
+$loginHeader     = $this->translate('system_user:login:Login with username and password');
+$lostPassword    = $this->translate('system_user:login:Forgot your password?');
+$clickHere       = $this->translate('system_user:login:Click here!');
+$alreadyLoggedIn = $this->translate('system_user:login:You are already logged in.');
+$username        = $this->translate('system_user:login:Username');
+$password        = $this->translate('system_user:login:Password');
+$login           = $this->translate('system_user:login:Login');
 $loginFormUrl = $this->url(array(), 'userLogin');
-$lostPassword = $this->translate('Forgot your password?');
-$clickHere = $this->translate('Click here!');
 $lostPasswordUrl = $this->url(array(), 'userRecoverPassword');
-$alreadyLoggedIn = $this->translate('You are already logged in.');
 ?>
 <div class="user-login">
   <h2><?php echo $loginHeader?> </h2>
@@ -15,15 +18,15 @@ $alreadyLoggedIn = $this->translate('You are already logged in.');
   <?php else : ?>
     <form method="POST" action="<?php echo $loginFormUrl?>">
       <div class="edit-username">
-        <label for="username"><?php echo $this->translate('Username')?></label>
+        <label for="username"><?php echo $username?></label>
           <input type="text" name="username" value="" />
       </div>
       <div class="edit-password">
-        <label for="password"><?php echo $this->translate('Password')?></label>
+        <label for="password"><?php echo $password?></label>
           <input type="password" name="password" value="" />
       </div>
       <div class="edit-login">
-        <input type="submit" name="login" value="<?php echo $this->translate('Login')?>" />
+        <input type="submit" name="login" value="<?php echo $login?>" />
       </div>
     </form>
     <div class="lost-password">

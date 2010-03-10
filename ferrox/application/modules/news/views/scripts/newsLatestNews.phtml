@@ -1,3 +1,6 @@
+<?php
+$postedBy = $this->translate('news:newsLatestNews:Posted by %1$s on %2$s');
+?>
 <?php foreach ($this->news as $news) : ?>
   <?php $lang = substr($news['locale'], 0, 2); ?>
   <div class="newsItem" id="news-<?php echo $news['id'];?>" lang="<?php echo $lang; ?>">
@@ -8,7 +11,7 @@
       <?php $username = $news['author']['username']; ?>
       <?php $date = new Zend_Date(strtotime($news['datePublished'])) ?>
       <?php $datePublished = $date->get(Zend_Date::DATE_MEDIUM) . ' ' . $date->get(Zend_Date::TIME_SHORT); ?>
-      <?php echo $this->translate('Posted by %1$s on %2$s', array($username, $datePublished)) ?>
+      <?php vprintf($postedBy, array($username, $datePublished)) ?>
     </h3>
     <p class="newsContent">
       <?php echo $news['content']?>

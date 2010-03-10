@@ -1,9 +1,11 @@
 <?php
+$tempSuspended = $this->translate('system_user:register:New user accounts have temporarily been suspended.');
 $isDisabled = TRUE;
+
 ?>
 
 <?php if ($isDisabled) : ?>
-  <?php echo $this->translate('New user accounts have temporarily been suspended.'); ?>
+  <?php echo $tempSuspended ?>
 <?php else: ?>
 
 <?php endif; ?>
