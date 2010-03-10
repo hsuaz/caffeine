@@ -1,5 +1,6 @@
 <?php foreach ($this->news as $news) : ?>
-  <div class="newsItem" id="news-<?php echo $news['id'];?>" lang="<?php echo substr($news['locale'], 0, 2); ?>">
+  <?php $lang = substr($news['locale'], 0, 2); ?>
+  <div class="newsItem" id="news-<?php echo $news['id'];?>" lang="<?php echo $lang; ?>">
     <h2 class="newsTitle">
       <?php echo $news['title']; ?>
     </h2>
