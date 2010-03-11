@@ -1,18 +1,17 @@
 <?php
 class Autoloader
   implements
-    Zend_Loader_Autoloader_Interface
+    \Zend_Loader_Autoloader_Interface
 
 {
-  /**
-   * Autoloader
-   * @param $class string
-   *  Classname (Absolute)
-   */
   public function autoload($class) {
-    $parts = \explode('_', $class);
     $extension = '.php';
-    $parts = \implode('/', $parts);
+    $split_key = '\\';
+    // If the class isn't namespaced, use PEAR style
+    if (FALSE === \strpos($class, '\\')) {
+      $split_key = '_';
+    }
+    $parts = \str_replace($split_key, DIRECTORY_SEPARATOR, $class);
     $filename = $parts . $extension;
     require_once($filename);
   }

@@ -1,11 +1,13 @@
 <?php
+declare(encoding='UTF-8');
+namespace Ferrox\Module;
 
-class Module_User {
+class User {
   const SYSTEM_ID = 'system_user';
 
   protected function staticRoute($path, $controller, $action) {
-    return new Zend_Controller_Router_Route_Static($path, array(
-        'module' => 'user',
+    return new \Zend_Controller_Router_Route_Static($path, array(
+        'module' => 'User',
         'controller' => $controller,
         'action' => $action,
       ));
@@ -14,11 +16,11 @@ class Module_User {
 
   protected function dynamicRoute($path, $controller, $action, $defaults) {
     $defaults += array(
-        'module' => 'user',
+        'module' => 'User',
         'controller' => $controller,
         'action' => $action,
      );
-     return new Zend_Controller_Router_Route($path, $defaults);
+     return new \Zend_Controller_Router_Route($path, $defaults);
   }
 
 

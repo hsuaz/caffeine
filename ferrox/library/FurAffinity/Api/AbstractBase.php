@@ -1,6 +1,8 @@
 <?php
+declare(encoding='UTF-8');
+namespace FurAffinity\Api;
 
-class FurAffinityApi_AbstractBase {
+class AbstractBase {
   static protected $_server = 'caffeine.localhost/externalApi.php';
   static protected $_protocol = 'http://';
   static protected $_sid = '';
@@ -43,9 +45,9 @@ class FurAffinityApi_AbstractBase {
       'status' => TRUE,
     );
     $uri = static::$_protocol . static::$_server . '/' . $cmd;
-    $http = new Zend_Http_Client();
+    $http = new \Zend_Http_Client();
     $http->setUri($uri);
-    $http->setMethod(Zend_Http_Client::GET);
+    $http->setMethod(\Zend_Http_Client::GET);
     $http->setConfig(array(
       'timeout' => 30,
       'useragent' => 'Ferrox External API Dispatcher',
@@ -56,7 +58,7 @@ class FurAffinityApi_AbstractBase {
 
     $response = $http->request();
     $status = $response->getStatus();
-    if ((int) (floor($status/100)) !== 2) {
+    if ((int) (\floor($status/100)) !== 2) {
       $result['status'] = FALSE;
       $result['__httpStatus'] = $status;
     } else {
@@ -71,7 +73,7 @@ class FurAffinityApi_AbstractBase {
     $body = $response->getBody();
     if ($body) {
       // This will throw a NOTICE if something goes horribly wrong
-      $data = unserialize($body);
+      $data = \unserialize($body);
       if (($data === FALSE) && ($body !== 'b:0;') ) {
         return array('status' => FALSE, 'error' => array('Unknown Error' => 'An unknown error has occured'));
       }
@@ -82,8 +84,8 @@ class FurAffinityApi_AbstractBase {
 
 
   protected function _isSuccess ($response) {
-    if (is_array($response)
-      && array_key_exists('status', $response)
+    if (\is_array($response)
+      && \array_key_exists('status', $response)
       && $response['status'])
     {
       return TRUE;

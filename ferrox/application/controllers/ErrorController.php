@@ -1,5 +1,8 @@
 <?php
-class ErrorController extends Zend_Controller_Action
+declare(encoding='UTF-8');
+
+class ErrorController
+  extends \Ferrox\Controller\Action
 {
   public function errorAction()
   {

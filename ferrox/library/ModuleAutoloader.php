@@ -1,7 +1,7 @@
 <?php
 class ModuleAutoloader
   implements
-    Zend_Loader_Autoloader_Interface
+    \Zend_Loader_Autoloader_Interface
 
 {
   /**
@@ -10,9 +10,9 @@ class ModuleAutoloader
    *  Classname (Absolute)
    */
   public function autoload($class) {
-    $parts = \explode('_', $class);
+    $parts = \explode('\\', $class);
     $extension = '.php';
-    $moduleName = $parts[1];
+    $moduleName = $parts[2];
     $parts = \implode('/', $parts);
     $filename = APPLICATION_PATH . "/modules/$moduleName/Module.php";
     require_once($filename);

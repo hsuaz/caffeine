@@ -1,6 +1,9 @@
 <?php
-class FurAffinityApi_User
-  extends FurAffinityApi_AbstractBase
+declare(encoding='UTF-8');
+namespace FurAffinity\Api;
+
+class User
+  extends AbstractBase
 {
 
   public function getLoginSalt ($username) {

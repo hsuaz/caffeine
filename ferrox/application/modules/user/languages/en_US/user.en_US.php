@@ -2,6 +2,9 @@
 
 return array(
   'system_user:register:New user accounts have temporarily been suspended.' => 'New user accounts have temporarily been suspended',
+  'system_user:register:Register' => 'Register',
+  'system_user:register:Email' => 'Email',
+  'system_user:register:Username' => 'Username',
   'system_user:userLoginBlock:Login' => 'Login',
   'system_user:userLoginBlock:Logout' => 'Logout',
   'system_user:userLoginBlock:Register' => 'Register',

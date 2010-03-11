@@ -1,6 +1,8 @@
 <?php
+declare(encoding='UTF-8');
 
-class IndexController extends Zend_Controller_Action
+class IndexController
+  extends \Ferrox\Controller\Action
 {
   public function indexAction()
   {

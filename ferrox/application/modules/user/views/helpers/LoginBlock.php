@@ -1,7 +1,9 @@
 <?php
+declare(encoding='UTF-8');
+namespace Ferrox\User\View\Helper;
 
-class Ferrox_User_View_Helper_LoginBlock
-  extends Zend_View_Helper_Abstract
+class User_LoginBlock
+  extends \Zend_View_Helper_Abstract
 {
 
   public function loginBlock ()
