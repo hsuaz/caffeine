@@ -12,8 +12,8 @@ class Bootstrap
     // Prevent undefined language errors for no-translation available
     $trLocale = 'en_US';
     $translate = new \Zend_Translate($adaptor, APPLICATION_PATH . '/languages', $trLocale, $options);
-    $translate->addTranslation(APPLICATION_PATH . '/modules/news/languages', $trLocale, $options);
-    $translate->addTranslation(APPLICATION_PATH . '/modules/user/languages', $trLocale, $options);
+    $translate->addTranslation(APPLICATION_PATH . '/modules/News/languages', $trLocale, $options);
+    $translate->addTranslation(APPLICATION_PATH . '/modules/User/languages', $trLocale, $options);
     $logger = new \Zend_Log_Writer_Stream(APPLICATION_PATH . '/../logs/untranslated.log');
     $log = new \Zend_Log($logger);
 
