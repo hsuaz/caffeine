@@ -108,8 +108,11 @@ class Bootstrap
     return $view;
   }
 
+  /**
+   * @todo: Make this function mbstring safe.
+   */
   protected function _addModuleViewPaths(Zend_View_Abstract $view, $moduleName) {
-    $path = APPLICATION_PATH . '/modules/' . \mb_strtolower($moduleName) . '/views/';
+    $path = APPLICATION_PATH . '/modules/' . \ucfirst($moduleName) . '/views/';
     $prefix = '\Ferrox\\' . $moduleName . '\View\\';
     $view->addFilterPath($path . 'filters', $prefix .'Filter\\' . $moduleName);
     $view->addHelperPath($path . 'helpers', $prefix .'Helper\\' . $moduleName);
