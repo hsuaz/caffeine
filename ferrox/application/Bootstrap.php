@@ -7,12 +7,22 @@ class Bootstrap
   protected function _initTranslateModule () {
     $adaptor = 'array';
     $options = array('scan' => Zend_Translate::LOCALE_DIRECTORY);
-    $trLocale = null;
-    $translate = new Zend_Translate($adaptor, APPLICATION_PATH . '/modules/user/languages', $trLocale, $options);
+
+    // Prevent undefined language errors for no-translation available
+    $trLocale = 'en_US';
+    $translate = new Zend_Translate($adaptor, APPLICATION_PATH . '/languages', $trLocale, $options);
     $translate->addTranslation(APPLICATION_PATH . '/modules/news/languages', $trLocale, $options);
-    $translate->addTranslation(APPLICATION_PATH . '/languages', $trLocale, $options);
+    $translate->addTranslation(APPLICATION_PATH . '/modules/user/languages', $trLocale, $options);
     $logger = new Zend_Log_Writer_Stream(APPLICATION_PATH . '/../logs/untranslated.log');
     $log = new Zend_Log($logger);
+
+    $locale = $this->getPluginResource('Locale')->getLocale();
+    if ($translate->isAvailable($locale)) {
+      $translate->setLocale($locale);
+    } elseif ($translate->isAvailably($locale->getLanguage())) {
+      $translate->setLocale($locale->getLanguage());
+    }
+
     $translate->setOptions(
      array (
        'log' => $log,

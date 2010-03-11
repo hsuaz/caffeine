@@ -1,6 +1,6 @@
 <?php echo $this->doctype(); ?>
 <?php
- $locale = 'en_US'; // need to set up properly
+ $locale = Zend_Registry::get('Zend_Locale');
 ?><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->lang?>" lang="<?php echo $this->lang ?>">
 <head>
   <?php echo $this->headTitle() ?>
