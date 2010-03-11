@@ -1,5 +1,7 @@
 <?php echo $this->doctype(); ?>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->lang?>" lang="<?php echo $this->lang ?>">
+<?php
+ $locale = 'en_US'; // need to set up properly
+?><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $this->lang?>" lang="<?php echo $this->lang ?>">
 <head>
   <?php echo $this->headTitle() ?>
   <?php echo $this->headMeta() ?>
@@ -12,7 +14,11 @@
     <?php echo $this->translate('site:layout:header:Ferrox: FurAffinity Reloaded') ?>
     <?php echo $this->loginBlock(); ?>
   </div>
-
+  <?php if ($locale !== 'en_US'): ?>
+    <div id="site-help-translate">
+      <?php echo $this->translate('site:index:Help translate FurAffinity into English'); ?>
+    </div>
+  <?php endif; ?>
   <div id="left-sidebar">
     <?php echo $this->placeholder('left-sidebar'); ?>
   </div>

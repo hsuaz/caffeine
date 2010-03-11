@@ -6,4 +6,5 @@ return array(
   'site:index:Recent Stories' => 'Recent Stories',
   'site:index:Recent Poetry' => 'Recent Poetry',
   'site:index:Recent Music' => 'Recent Music',
+  'site:index:Help translate FurAffinity into English' => 'Help translate FurAffinity into American English', 
 );
