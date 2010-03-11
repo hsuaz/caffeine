@@ -1,6 +1,8 @@
 <?php
 $postedBy = $this->translate('news:newsLatestNews:Posted by %1$s on %2$s');
 ?>
+<div id="newsLatestNews">
+  <h1 class="blockTitle"><span><?php echo $this->translate('news:newsLatestNews:Latest News');?></span></h1>
 <?php foreach ($this->news as $news) : ?>
   <?php $lang = substr($news['locale'], 0, 2); ?>
   <div class="newsItem" id="news-<?php echo $news['id'];?>" lang="<?php echo $lang; ?>">
@@ -18,3 +20,4 @@ $postedBy = $this->translate('news:newsLatestNews:Posted by %1$s on %2$s');
     </p>
   </div>
 <?php endforeach; ?>
+</div>

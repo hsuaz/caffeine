@@ -6,24 +6,33 @@
   <?php echo $this->headTitle() ?>
   <?php echo $this->headMeta() ?>
   <?php echo $this->headLink() ?>
+  <link href="/css/global.css" rel="stylesheet" type="text/css" />
   <?php echo $this->headStyle() ?>
   <?php echo $this->headScript() ?>
 </head>
 <body class="" id="">
+ <div id="site-container">
   <div id="site-header">
-    <?php echo $this->translate('site:layout:header:Ferrox: FurAffinity Reloaded') ?>
+    <?php /* Change to $this->siteBanner() */ ?>
+    <div id="site-header-banner">
+      <a href="/"><span><?php echo $this->translate('site:layout:header:Ferrox: FurAffinity Reloaded') ?></span></a>
+    </div>
     <?php echo $this->loginBlock(); ?>
+    <div class="clear"></div>
   </div>
+
   <?php if ($locale !== 'en_US'): ?>
     <div id="site-help-translate">
       <?php echo $this->translate('site:index:Help translate FurAffinity into English'); ?>
     </div>
   <?php endif; ?>
-  <div id="left-sidebar">
+
+
+  <div id="site-left-sidebar">
     <?php echo $this->placeholder('left-sidebar'); ?>
   </div>
 
-  <div id="content">
+  <div id="site-content">
     <?php if (count($this->placeholder('messages'))): ?>
       <div id="error-pane">
         <?php echo $this->placeholder('messages'); ?>
@@ -33,11 +42,13 @@
     <?php echo $this->layout()->content; ?>
   </div>
 
-  <div id="right-sidebar">
+  <div id="site-right-sidebar">
     <?php echo $this->placeholder('right-sidebar'); ?>
   </div>
+
   <div id="site-footer">
     <?php echo $this->translate('site:layout:footer:Ferrox: FurAffinity Reloaded') ?>
   </div>
+ </div>
 </body>
 </html>
