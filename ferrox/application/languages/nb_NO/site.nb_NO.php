@@ -1,4 +1,5 @@
 <?php
 return array(
-  'site:index:Help translate FurAffinity into English' => 'Hjelp oversette FurAffinity til bokmål',
+  // Confirmed: 2010-03-10
+  'site:index:Help translate FurAffinity into English' => 'Hjelp til med å oversette FurAffinity til Norsk (Bokmål)',
 );
