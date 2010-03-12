@@ -1,4 +1,5 @@
 <?php
 return array(
-  'site:index:Help translate FurAffinity into English' => 'Pomoc s prekladom FurAffinity do slovenskéhoi',
+  // Confirmed: 2010-03-11
+  'site:index:Help translate FurAffinity into English' => 'Pomôcť s prekladom do slovenské FurAffinity',
 );
