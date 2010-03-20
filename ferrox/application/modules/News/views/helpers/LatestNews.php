@@ -22,6 +22,7 @@ class News_LatestNews
           'username' => 'Unknown',
         )
       );
+    }
 
     $this->view->news = $news;
     return $this->view->render('newsLatestNews.phtml');
