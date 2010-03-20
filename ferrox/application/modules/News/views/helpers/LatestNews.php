@@ -13,14 +13,16 @@ class News_LatestNews
     // @TODO Add to the API Layer
     if (!\is_array($news)) {
       $news = array(
-        'locale' => 'en_US',
-        'id' => 0,
-        'title' => 'News is Unavailable',
-        'datePublished' => '1999-12-31 23:59:59',
-        'content' => 'News Server is currently unavailable.',
-        'author' => array(
-          'username' => 'Unknown',
-        )
+        array(
+          'locale' => 'en_US',
+          'id' => 0,
+          'title' => 'News is Unavailable',
+          'datePublished' => '1999-12-31 23:59:59',
+          'content' => 'News Server is currently unavailable.',
+          'author' => array(
+            'username' => 'Unknown',
+          ),
+        ),
       );
     }
 
