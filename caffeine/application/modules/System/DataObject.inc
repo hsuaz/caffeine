@@ -10,6 +10,9 @@ class DataObject
    */
   protected $_fields = array();
 
+  public function __construct() {
+  }
+
 
   public function toArray() {
     return $this->_fields;
@@ -24,6 +27,15 @@ class DataObject
     $data = unserialize($serialized);
     $this->_fields = $data['_fields'];
   }
+
+  /**
+   * Unset function
+   *
+   */
+  public function __unset($key) {
+    unset($this->_fields[$key]);
+  }
+
 
   /**
    * Get function
