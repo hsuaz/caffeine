@@ -171,6 +171,11 @@ class Bootstrap {
     if (!isset($_SERVER['PATH_INFO'])) {
       $this->parseRequestUri();
     }
+
+    if (\strlen($_SERVER['PATH_INFO']) === 0) {
+      return;
+    }
+
     if ($_SERVER['PATH_INFO'][0] === '/') {
       $_SERVER['PATH_INFO'] = substr($_SERVER['PATH_INFO'], 1);
     }
@@ -269,15 +274,17 @@ class Bootstrap {
   protected function _cleanArray($input) {
     $result = array();
     foreach ($input as $key => $value) {
-      if (!$this->_validEncoding($key) || !$this->_validEncoding($value)) {
+      $key = trim($key);
+      if (!$this->_validEncoding($key) || !$this->_validEncoding($value) || empty($key)) {
         $this->_dieWithCode(Net\HttpStatus::HTTP_BAD_REQUEST);
       }
 
       $key = $this->_normalizeString($key);
       if (\is_array($value)) {
-        $result[$key] = $this->_cleanRequest($value);
+        $result[$key] = $this->_cleanArray($value);
       } else {
         $value = $this->_normalizeString($value);
+        $value = trim($value);
         $result[$key] = $value;
       }
     }
