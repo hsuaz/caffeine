@@ -146,4 +146,8 @@ abstract class ModuleBase implements IModule {
       return $this->$method();
     }
   }
+
+  public function getHandledEvents() {
+    return array();
+  }
 }
