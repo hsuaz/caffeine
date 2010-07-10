@@ -80,6 +80,27 @@ class _module
           ),
         ),
       ),
+//      'user/register/getRequiredParams' => array(
+//      ),
+      'user/register/getFields' => array(
+        'class' => $classNamespace . '\RegisterFields',
+        'api' => array(
+          'name' => 'registerFields',
+          'parameters' => array(
+          ),
+        ),
+      ),
+      'user/register' => array(
+        'class' => $classNamespace . '\Register',
+        'api' => array(
+          'name' => 'register',
+          'parameters' => array(
+            'username' => NULL,
+            'email' => NULL,
+            'agree_tos' => NULL,
+          ),
+        ),
+      ),
     );
     return $api;
   }
@@ -87,6 +108,8 @@ class _module
 
   /**
    * External API
+   * @todo: Change this to add better event handling so that
+   *      data going out can be filtered for security.
    * @return array
    */
   public function routingExternalApi () {
@@ -100,11 +123,16 @@ class _module
       'user/logout' => array(
         'cache' => FALSE,
         ),
-      'user/findById' => array(),
       'user/find/username' => array(
         'filterResult' => '\\' . __NAMESPACE__ . '\ExternalApi\UserFilter'
         ),
       'user/getInfo' => array(
+        ),
+      'user/register/getFields' => array(
+
+        ),
+      'user/register' => array (
+        'cache' => FALSE,
         ),
     );
     return $api;

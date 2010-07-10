@@ -11,10 +11,13 @@ class Router {
     }
 
     // Allow for Dependance Injection of the application
+    $application = NULL;
     if (\array_key_exists('application', $config)) {
       $application = $config['application'];
-    } else {
-      $application = \Ferrox\Caffeine\Application::getInstance();
+    }
+
+    if ($application == NULL) {
+      throw new Exception('No Application instance provided to Router.');
     }
 
 

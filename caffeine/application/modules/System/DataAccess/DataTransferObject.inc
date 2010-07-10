@@ -3,7 +3,8 @@ declare(encoding=UTF8);
 namespace Ferrox\Caffeine\System\DataAccess;
 
 class DataTransferObject implements
-    IDataTransferObject
+    IDataTransferObject,
+    \Iterator
 {
   private $_fields = array();
   public function __construct (array $init = array()) {
@@ -11,6 +12,13 @@ class DataTransferObject implements
       $this->$key = $value;
     }
   }
+
+
+  public function rewind () { return reset($this->_fields); }
+  public function current () { return current($this->_fields); }
+  public function next () { return next($this->_fields); }
+  public function key () { return key($this->_fields); }
+  public function valid () { return (NULL === $this->key()); }
 
   public function __get($key) {
     if (array_key_exists($key, $this->_fields)) {

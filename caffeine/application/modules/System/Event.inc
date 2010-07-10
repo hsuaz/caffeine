@@ -7,10 +7,37 @@ class Event implements IEvent {
   // [EventTrigger] => array(Modules Handling)
   protected $_staticCache = NULL;
 
-  protected function getApplication() {
-    return \Ferrox\Caffeine\Application::getInstance();
+  /**
+   * Application Instance
+   * @var \Ferrox\Caffeine\Application
+   */
+  protected $_application = NULL;
+
+
+  /**
+   * Default Constructior
+   * @param unknown_type $application
+   */
+  public function __construct ($application) {
+    // TODO: Create an IApplication interface for testing purposes
+    if (!($application instanceof \Ferrox\Caffeine\Application)) {
+      throw new Exception ("An instance of Application is required.");
+    }
+    $this->_application = $application;
   }
 
+
+  /**
+   * Returns the current application
+   */
+  protected function getApplication() {
+    return $this->_application;
+  }
+
+
+  /**
+   * Builds the cache of the application hooks
+   */
   protected function buildCache() {
     if ($this->_staticCache !== NULL) {
       return;
@@ -30,6 +57,12 @@ class Event implements IEvent {
     $this->_staticCache = $hookInfo;
   }
 
+
+  /**
+   * Returns the targets for the given hook
+   * @param unknown_type $moduleId
+   * @param unknown_type $name
+   */
   protected function getTargets($moduleId, $name) {
     $this->buildCache();
     $key = $moduleId . '::' . $name;
@@ -44,6 +77,13 @@ class Event implements IEvent {
     return $results;
   }
 
+
+  /**
+   * @param unknown_type $moduleId
+   * @param unknown_type $name
+   * @param unknown_type $obj
+   * @param unknown_type $params
+   */
   public function trigger ($moduleId, $name, $obj, $params) {
     $targetModules = $this->getTargets($moduleId, $name);
     foreach ($targetModules as $callable) {

@@ -18,29 +18,11 @@ class Application {
 
   protected $_objectCache = array();
   protected $_databaseCache = array();
-  static protected $_instance = NULL;
   protected $_initialized = FALSE;
 
   protected $_modules = array();
 
-  /**
-   * Singleton instance
-   */
-  protected function __construct() {
-  }
-
-
-  /**
-   * Returns the singleton instnace
-   * @return Application
-   */
-  static public function getInstance() {
-    if (\is_null(static::$_instance)) {
-      static::$_instance = new static();
-    }
-    return static::$_instance;
-  }
-
+  protected $_eventHandler = NULL;
 
   /**
    * Sets the configuration file
@@ -74,6 +56,9 @@ class Application {
    * Initializes the application data
    */
   public function init() {
+    if ($this->_eventHandler === NULL) {
+      $this->_initDefaultEventHandler();
+    }
     $this->_loadModules();
   }
 
@@ -220,7 +205,15 @@ class Application {
   }
 
 
+  protected function setEventHandler (\Ferrox\Caffeine\System\IEvent $event) {
+    $this->_eventHandler = $event;
+  }
 
+
+  protected function _initDefaultEventHandler () {
+    $this->_eventHandler = new \Ferrox\Caffeine\System\Event($this);
+    return $this->_eventHandler;
+  }
 
   protected function get_system_user ($applicationConfig, $moduleConfig) {
     $dataAccess = new $applicationConfig['dataAccess'](
@@ -230,6 +223,7 @@ class Application {
         )
       );
     $moduleConfig['dataAccess'] = $dataAccess;
+    $moduleConfig['eventHandler'] = $this->_eventHandler;
     $user = new User\User($moduleConfig);
     return $user;
   }
@@ -245,4 +239,17 @@ class Application {
     $news= new News\News($moduleConfig);
     return $news;
   }
+
+  protected function get_user_profile ($applicationConfig, $moduleConfig) {
+    $dataAccess = new $applicationConfig['dataAccess'](
+        array(
+          'databaseRead' => $this->_getDatabaseConnection($applicationConfig['databaseRead']),
+          'databaseWrite' => $this->_getDatabaseConnection($applicationConfig['databaseWrite']),
+        )
+      );
+    $moduleConfig['dataAccess'] = $dataAccess;
+    $profile = new Profile\Profile($moduleConfig);
+    return $profile;
+  }
+
 }

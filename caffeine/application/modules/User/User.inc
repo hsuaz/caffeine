@@ -3,6 +3,8 @@ declare(encoding='UTF-8');
 namespace Ferrox\Caffeine\User;
 
 use
+ \Ferrox\Caffeine\System\IEvent as IEvent,
+ \Ferrox\System\IValidator as IValidator,
  \Ferrox\Caffeine\System\DataAccess\DataTransferObject as DataTransferObject;
 
 class User
@@ -15,6 +17,9 @@ class User
   const USERNAME_MAX = 15;
 
 
+  protected $_usernameValidator = NULL;
+
+
   /**
    *
    * @var IDataAccess
@@ -23,22 +28,75 @@ class User
 
 
   /**
+   * @var array Configuration Options;
+   */
+  protected $_config = array();
+
+  /**
+   * @var Event
+   */
+  protected $_event = NULL;
+
+
+  /**
    * Default Constructor
    * @param $options array
    * @return unknown_type
    */
   public function __construct ($options = array()) {
-    if (
-        !(    (array_key_exists('dataAccess', $options))
-           && ($options['dataAccess'] instanceof IDataAccess)
-         )
-       )
+    $this->_config = $options;
+    $this->_parseConfiguration();
+    $this->_initDefaults();
+    $this->_assertInitialState();
+    $this->reset();
+  }
+
+
+  /**
+   * Check initial State assumptions
+   */
+  protected function _assertInitialState () {
+    if ($this->_dataAccess === NULL || !($this->_dataAccess instanceof IDataAccess))
     {
       throw new Exception ('Database Access instance not inserted.');
     }
+    if ($this->_event === NULL || !($this->_event instanceof IEvent))
+    {
+      throw new Exception ('Database Access instance not inserted.');
+    }
+  }
 
-    $this->_dataAccess = $options['dataAccess'];
-    $this->reset();
+
+  /**
+   * Parse configurations
+   */
+  protected function _parseConfiguration () {
+    foreach ($this->_config as $key => $value) {
+      $method = 'set' . \ucfirst($key);
+      if (\method_exists($this, $method)) {
+        $this->$method($value);
+      }
+    }
+  }
+
+
+  protected function _initDefaults () {
+    if ($this->_usernameValidator === NULL) {
+
+    }
+    if ($this->_event === NULL) {
+      $this->_event = new \Ferrox\Caffeine\System\Event();
+    }
+  }
+
+
+  public function setEventHandler (IEvent $event) {
+    $this->_event = $event;
+  }
+
+
+  public function setUsernameValidator (IValidator $usernameValidator) {
+    $this->_usernameValidator = $usernameValidator;
   }
 
 
@@ -56,6 +114,7 @@ class User
       'passwordSalt' => md5(time()),
       'status' => self::STATUS_ACTIVE,
     );
+    $this->triggerEvent('reset');
   }
 
 
@@ -65,7 +124,7 @@ class User
 
 
   public function save () {
-    $status = $this->_dataAccess->update(new DataTransferObject (
+    $dto = new DataTransferObject (
       array(
         'id' => $this->id,
         'username' => $this->username,
@@ -73,7 +132,9 @@ class User
         'passwordSalt' => $this->passwordSalt,
         'status' => $this->status,
       )
-    ));
+    );
+    $this->triggerEvent('update');
+    $status = $this->_dataAccess->update();
     return $status;
   }
 
@@ -83,6 +144,7 @@ class User
       array(
         'id' => $this->id,
       )));
+
     if ($status) {
       $this->find($this->id);
     }
@@ -91,16 +153,18 @@ class User
 
 
   public function create () {
-    $status = $this->_dataAccess->insert(new DataTransferObject(
+    $dto = new DataTransferObject(
       array(
         'username' => $this->username,
         'passwordHash' => $this->passwordHash,
         'passwordSalt' => $this->passwordSalt,
         'status' => $this->status,
-      )));
+      ));
+    $status = $this->_dataAccess->insert();
     if ($status) {
       $this->id = $status;
     }
+    $this->triggerEvent('create');
     return !empty($status);
   }
 
@@ -112,7 +176,16 @@ class User
       $dto = $dto[0];
       $this->_populateFromDto($dto);
     }
-    return ($this->id == $userId);
+    $success = ($this->id == $userId);
+    if ($success) {
+      $this->triggerEvent('load');
+    }
+    return $success;
+  }
+
+
+  protected function triggerEvent ($eventName, $params = array()) {
+    $this->_event->trigger(_module::ID, $eventName, $this, $params);
   }
 
 
@@ -123,19 +196,25 @@ class User
       $dto = $dto[0];
       $this->_populateFromDto($dto);
     }
-
-    return ($this->username == $username);
+    $success = ($this->username == $username);
+    if ($success) {
+      $this->triggerEvent('load');
+    }
+    return $success;
   }
 
 
   public function cyclePasswordSalt () {
+    $oldSalt = $this->passwordSalt;
     $this->passwordSalt = md5($this->passwordSalt . time());
-    $status = $this->_dataAccess->update(new DataTransferObject (
+    $dto = new DataTransferObject (
       array(
         'id' => $this->id,
         'passwordSalt' => $this->passwordSalt,
       )
-    ));
+    );
+    $this->triggerEvent('cyclePasswordSalt', array('oldPasswordSalt' => $oldSalt));
+    $status = $this->_dataAccess->update($dto);
     return $status;
   }
 
@@ -150,36 +229,31 @@ class User
   }
 
 
-  public function validateHandle ($value) {
-    // Language Coverage
-    // FRENCH, GERMAN, ENGLISH, SPANISH, ICELANDIC, NORWEGIAN, SWEDISH, FINNISH
-    // LATVIAN, LITUANIAN, POLISH, CZECH, DUTCH, ROMANIAN, PORTUGUESE,
-    // TURKISH, SLOVAK
-    $regex = '/^(?:';
-    $regex .= '(?:[a-z0-9\xDF\xE6\xF0\xF8\xFE\x{0153}\x{0142}\x{0131}])'; // ss, ae, eth, o/, thorn, oe, l/, dotless-i
-    $regex .= '|(?:[aeiouy][\x{0308}\x{0300}\x{0302}])'; // Umlaut, grave, acute, circumplex
-    $regex .= '|(?:[aeiouynlrsz][\x{0301}])'; // Acute
-    $regex .= '|(?:[aeioun][\x{0303}])'; // Tilde
-    $regex .= '|(?:[cgklns][\x{0327}])'; // Cedilla
-    $regex .= '|(?:[aou][\x{030A}])'; // ring
-    $regex .= '|(?:[cdensrtz][\x{030C}])'; // Hacek
-    $regex .= '|(?:[aeiu][\x{0328}])'; // Ogonek
-    $regex .= '|(?:[aeiu][\x{0304}])'; // Overbar
-    $regex .= '|(?:[ez][\x{0307}])'; // Overdot
-    $regex .= '|(?:[st][\x{0326}])'; // Comma
-    $regex .= '|(?:[ag][\x{0306}])'; // Breve
-    $regex .= '){' . USERNAME_MIN . ',' . USERNAME_MAX . '}$/u';
+  public function validate() {
+
   }
 
-  public function suggestUsernameForHandle ($value) {
+  /**
+   * Naming Conventions:
+   * @param unknown_type $value
+   */
+  protected function validateHandle ($value) {
+  }
+
+  protected function suggestUsernameForHandle ($value) {
     $value = mb_strtolower($value, 'UTF-8');
     $value = \Normalizer::normalize($value, \Normalizer::FORM_D);
     $value = preg_replace('/^[a-z0-9]/', $value);
     return $value;
   }
 
-  public function validateUsername ($value) {
-    $regex = '/^[a-z0-9]{' . self::USERNAME_MIN . ',' . self::USERNAME_MAX . '}$/u';
+  protected function _getUsernameValidator() {
+    $usernameValidator = new \Ferrox\System\Text\UsernameValidator();
+    return $usernameValidator;
+  }
+
+  protected function validateUsername ($value) {
+    $regex = $this->_getUsernameValidator()->getRegex();
     return preg_match($regex, $value);
   }
 
@@ -193,6 +267,39 @@ class User
   public function validatePasswordHash ($passwordHash) {
     $hash = md5($this->passwordHash . $this->salt);
     return ($passwordHash == $hash);
+  }
+
+  public function getRegistrationRequirements ($object, $params) {
+    $validator = $this->_getUsernameValidator();
+    $result = $params['result'];
+    if (!isset($result->group)) {$result->group = array(); }
+    $result->group[] = 'primary information';
+
+    $result->username = array(
+      '#type' => 'text',
+      '#validationType' => 'regex',
+      '#regex' => $validator->getRegex(),
+      '#maxLength' => $validator->getMinLength(),
+      '#minLength' => $validator->getMaxLength(),
+      '#defaultValue' => '',
+      '#required' => TRUE,
+      '#name' => 'username',
+      '#_apiReference' => 'Desired Username for Login',
+      '#group' => 'primary information',
+      '#disabled' => FALSE,
+    );
+    $result->emailAddress = array(
+      '#type' => 'text',
+      '#validationType' => 'email',
+      '#maxLength' => 128,
+      '#minLength' => 6,
+      '#defaultValue' => '',
+      '#required' => TRUE,
+      '#name' => 'emailAddress',
+      '#_apiReference' => 'Admin Contact Email',
+      '#group' => 'primary information',
+      '#disabled' => FALSE,
+    );
   }
 
 }

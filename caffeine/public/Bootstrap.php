@@ -47,6 +47,14 @@ class Bootstrap {
    * @var \Zend_Config
    */
   protected $_applicationConfig = NULL;
+
+  /**
+   * Application
+   * @var unknown_type
+   */
+  protected $_application = NULL;
+
+
   /**
    * Default Constructor
    * @param $configFile string
@@ -69,6 +77,14 @@ class Bootstrap {
    */
   public function getConfig () {
     return $this->_config;
+  }
+
+
+  /**
+   * Return the application instance
+   */
+  public function getApplication () {
+    return $this->_application;
   }
 
 
@@ -103,9 +119,10 @@ class Bootstrap {
 
   protected function _initApplication() {
     if ($this->_applicationConfig instanceof \Zend_Config) {
-      $application = \Ferrox\Caffeine\Application::getInstance();
+      $application = new \Ferrox\Caffeine\Application();
       $application->setConfig($this->_applicationConfig);
       $application->init();
+      $this->_application = $application;
     }
   }
 

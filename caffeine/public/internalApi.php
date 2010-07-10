@@ -18,11 +18,15 @@ $dispatchConfig = $config->get('dispatcher', array());
 if (!is_array($dispatchConfig)) {
   $dispatchConfig = $dispatchConfig->toArray();
 }
-$dispatchConfig['application'] = \Ferrox\Caffeine\Application::getInstance();
+$dispatchConfig['application'] = $bootstrap->getApplication();
 $dispatcher = new \Ferrox\Caffeine\System\Api\InternalDispatcher($dispatchConfig);
+
+$routerConfig = $config->toArray();
+$routerConfig['application'] = $bootstrap->getApplication();
+
 $internalApi = $config->toArray();
 $internalApi['dispatcher'] = $dispatcher;
-$internalApi['routes'] = \Ferrox\Caffeine\System\Router::loadRoutes('internalApi', $config);
+$internalApi['routes'] = \Ferrox\Caffeine\System\Router::loadRoutes('internalApi', $routerConfig);
 
 $api = new \Ferrox\Caffeine\System\Api($internalApi);
 $api->run();

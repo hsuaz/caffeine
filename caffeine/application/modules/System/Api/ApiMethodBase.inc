@@ -14,6 +14,8 @@ abstract class ApiMethodBase {
   protected $_error = array();
   protected $_outputSent = FALSE;
   protected $_application = NULL;
+  protected $_event = NULL;
+  protected $_initStack = array();
 
   const ERROR_REQUIRED = 'error_required';
 
@@ -33,6 +35,17 @@ abstract class ApiMethodBase {
     }
   }
 
+ protected function _initEvent(\Ferrox\Caffeine\System\IEvent $event = NULL) {
+    if ($event == NULL) {
+      $event = new \Ferrox\Caffeine\System\Event($this->_getApplication());
+    }
+    $this->_event = $event;
+  }
+
+
+  protected function _getEvent() {
+    return $this->_event;
+  }
 
   protected function _getApplication() {
     return $this->_application;
@@ -89,6 +102,7 @@ abstract class ApiMethodBase {
    */
   protected function _init() {
     $this->_parseConfiguration();
+    $this->_initEvent();
     $this->_validateRequirements();
     $this->_validateInput();
   }
@@ -112,6 +126,13 @@ abstract class ApiMethodBase {
     if (\array_key_exists('defaults', $this->_config['routeOptions'])) {
       $this->_populateDefaults($this->_config['defaults']);
     }
+  }
+
+
+  /**
+   */
+  protected function setEvent (\Ferrox\Caffeine\System\IEvent $value) {
+    $this->_event = $value;
   }
 
 
