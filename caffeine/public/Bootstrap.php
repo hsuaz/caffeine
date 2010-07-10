@@ -213,7 +213,7 @@ class Bootstrap {
    */
   protected function _cleanHost() {
     $hostName = $_SERVER['HTTP_HOST'];
-    $regex = '/^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9](\.[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])+$/D';
+    $regex = '/^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9](\.[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])+(:[0-9]{1,5})?$/D';
     if (!\preg_match($regex, $hostName)) {
       $this->_dieWithCode(Net\HttpStatus::HTTP_BAD_REQUEST);
     }
